@@ -96,13 +96,26 @@ def detail_daily_ranking(date):
         except Exception as e:
             print(e)
     end = datetime.datetime.now()
-    print('totally used ', (end-start).seconds, ' seconds')
+    print('download', date, 'used ', (end-start).seconds, ' seconds')
 
 
 def main():
-    choice = input('请选择下载模式，回车下载昨日日榜，\n输入日榜日期（格式如：20210406）下载指定日期日榜：')
+    print(
+        '请选择下载模式，注意日榜最新是昨天的日期。', '回车下载昨日日榜，', '输入日榜日期（格式如：20210406）下载指定日期日榜。',
+        '批量下载：输入时间段进行批量下载，如 20210401,20210416 ，注意以英文逗号拆分。',
+        sep='\n'
+    )
+    choice = input('请输入：')
     if choice == '':
         yesterday_ranking()
+
+    elif ',' in choice:
+        start = datetime.datetime.now()
+        for i in range(int(choice.split(',')[0]), int(choice.split(',')[1])+1):
+            detail_daily_ranking(str(i))
+        end = datetime.datetime.now()
+        print('the whole process used ', (end - start).seconds, ' seconds')
+
     else:
         detail_daily_ranking(choice)
 
