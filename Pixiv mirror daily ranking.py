@@ -29,12 +29,14 @@ def download(url):
     resp = requests.get(url, headers=headers)
     all_data = json.loads(resp.text)['rows']
     num = 1
+    param = re.findall(r'\d+', url)
     for data in all_data:
-        title = str(num) + change(data['title']) + '.jpg'
-        url = data['regular_url']
-        print('saving:  ', title, url)
+        title = param[0] + '_p' + str(int(int(param[-1])/30+1)) + '_' + str(num) +\
+                ' ' + change(data['title']) + '.jpg'
+        download_url = data['regular_url']
+        print('saving:  ', title, download_url)
         try:
-            r = requests.get(url, headers=headers, timeout=5)
+            r = requests.get(download_url, headers=headers, timeout=5)
             with open('./日榜/'+title, 'wb') as f:
                 f.write(r.content)
         except Exception as eee:
@@ -82,7 +84,7 @@ def yesterday_ranking():
         except Exception as e:
             print(e)
     end = datetime.datetime.now()
-    print('totally used ', (end-start).seconds, ' seconds')
+    print('totally spent ', (end-start).seconds, ' seconds')
 
 
 def detail_daily_ranking(date):
@@ -93,7 +95,7 @@ def detail_daily_ranking(date):
         except Exception as e:
             print(e)
     end = datetime.datetime.now()
-    print('download', date, 'used ', (end-start).seconds, ' seconds')
+    print('download', date, 'spent ', (end-start).seconds, ' seconds')
 
 
 def main():
@@ -103,7 +105,7 @@ def main():
         sep='\n'
     )
     choice = input('请输入：')
-    
+
     try:
         os.mkdir('日榜')
     except Exception as e:
@@ -113,11 +115,12 @@ def main():
         yesterday_ranking()
 
     elif ',' in choice:
-        start = datetime.datetime.now()
+        start_time = datetime.datetime.now()
         for i in range(int(choice.split(',')[0]), int(choice.split(',')[1])+1):
             detail_daily_ranking(str(i))
-        end = datetime.datetime.now()
-        print('the whole process used ', (end - start).seconds, ' seconds')
+        end_time = datetime.datetime.now()
+        t = end_time - start_time
+        print('the whole process spent: ', t)
 
     else:
         detail_daily_ranking(choice)
