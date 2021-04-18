@@ -19,12 +19,6 @@ def change(name):
     return new_name
 
 
-try:
-    os.mkdir('日榜')
-except Exception as e:
-    print(e)
-
-
 headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                   ' Chrome/89.0.4389.128 Safari/537.36 Edg/89.0.774.77'
@@ -106,6 +100,12 @@ def main():
         sep='\n'
     )
     choice = input('请输入：')
+    
+    try:
+        os.mkdir('日榜')
+    except Exception as e:
+        print(e)
+
     if choice == '':
         yesterday_ranking()
 
